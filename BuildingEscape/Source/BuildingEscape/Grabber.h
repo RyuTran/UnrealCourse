@@ -30,7 +30,9 @@ private:
 	float Reach = 100.f;
 	
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
-	UInputComponent* InputComponent = nullptr;
+	UInputComponent* InputComponent = nullptr; 
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation; 
 
 	void Grab();
 
@@ -43,7 +45,10 @@ private:
 	// Find (assumed) attached input component
 	void SetupInputComponent();
 
-
 	// Return hit for first physics body and reach
 	const FHitResult GetFirstPhysicsBodyInReach();
+
+	FVector GetLineTraceEnd();
+
+	FVector GetLineTraceStart();
 };
