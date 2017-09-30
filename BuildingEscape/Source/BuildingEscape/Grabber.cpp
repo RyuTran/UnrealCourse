@@ -97,11 +97,10 @@ void UGrabber::Grab()
 	if (ActorHit)
 	{
 		// TODO attach physics handle
-		PhysicsHandle->GrabComponent(
+		PhysicsHandle->GrabComponentAtLocation(
 			ComponentToGrab,
 			NAME_None, // NO bone is needed
-			ComponentToGrab->GetOwner()->GetActorLocation(),
-			true // allow rotation
+			ComponentToGrab->GetOwner()->GetActorLocation()
 		);
 	}
 }
