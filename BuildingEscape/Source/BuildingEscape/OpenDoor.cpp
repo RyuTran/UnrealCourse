@@ -29,12 +29,6 @@ void UOpenDoor::BeginPlay()
 	}
 }
 
-void UOpenDoor::OpenDoor()
-{
-	//Owner->SetActorRotation(FRotator(0.0f, OpenAngle, 0.0f));
-	OnOpenRequest.Broadcast();
-}
-
 void UOpenDoor::CloseDoor()
 {
 	Owner->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
@@ -46,18 +40,15 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// Poll the Trigger Volume
-	if(GetTotalMassOFActorOnPlate() > 50.f)
+	if(GetTotalMassOFActorOnPlate() > TriggerMass)
 	{
-		OpenDoor();
-		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
+		OnOpen.Broadcast();
+		UE_LOG(LogTemp, Warning, TEXT("%s is openning"), *GetOwner()->GetName());
 	}
-
-	// Check if it's time to close the door
-	// If the time right now is passed the time the last door open by more than the delay
-	if (LastDoorOpenTime + DoorCloseDelay <= GetWorld()->GetTimeSeconds())
+	else
 	{
 		// Close the door
-		CloseDoor();
+		OnClose.Broadcast();
 	}
 }
 
@@ -72,7 +63,6 @@ float UOpenDoor::GetTotalMassOFActorOnPlate()
 	for (const auto* Actor : OverlappingActors)
 	{
 		TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
-		UE_LOG(LogTemp, Warning, TEXT("%s on pressure plate"), *Actor->GetName());
 	}
 
 	return TotalMass;
